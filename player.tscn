@@ -1,0 +1,68 @@
+[gd_scene load_steps=10 format=3 uid="uid://batfqjmxawn4j"]
+
+[ext_resource type="Script" uid="uid://cylr6v6ilipbb" path="res://player.gd" id="1_onrkg"]
+[ext_resource type="Shape2D" uid="uid://b8648a7do7p22" path="res://playercollbox.tres" id="2_i3pqv"]
+[ext_resource type="SpriteFrames" uid="uid://g6pa6aotugah" path="res://playersprites.tres" id="2_onrkg"]
+[ext_resource type="Texture2D" uid="uid://in0y53byswm0" path="res://sanitizerbubble.png" id="4_2hs0m"]
+[ext_resource type="AudioStream" uid="uid://cw3mtvp0suh1t" path="res://jmp.wav" id="4_hqtel"]
+[ext_resource type="AudioStream" uid="uid://cidx6pa3y72my" path="res://sanitizer.wav" id="6_2hs0m"]
+[ext_resource type="Texture2D" uid="uid://scjg3v30vc2" path="res://Download36828.png" id="7_1jxqw"]
+[ext_resource type="AnimationLibrary" uid="uid://cp78jtu304f2d" path="res://human_anims.res" id="8_dw050"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b26j0"]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 9
+collision_mask = 192
+script = ExtResource("1_onrkg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = ExtResource("2_i3pqv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = ExtResource("2_onrkg")
+animation = &"jumping"
+autoplay = "idle"
+
+[node name="JumpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_hqtel")
+
+[node name="SanitizerAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_2hs0m")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("7_1jxqw")
+hframes = 13
+vframes = 54
+frame = 97
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
+root_node = NodePath("../..")
+libraries = {
+&"": ExtResource("8_dw050"),
+&"playeranim": SubResource("AnimationLibrary_b26j0")
+}
+autoplay = "idle"
+
+[node name="SanitizerSpray" type="RayCast2D" parent="Sprite2D"]
+position = Vector2(0, 10)
+enabled = false
+target_position = Vector2(120, 0)
+collision_mask = 32
+
+[node name="SanitizerParticles" type="CPUParticles2D" parent="Sprite2D"]
+position = Vector2(10, 10)
+emitting = false
+amount = 16
+texture = ExtResource("4_2hs0m")
+lifetime = 0.2
+emission_shape = 3
+emission_rect_extents = Vector2(1, 1)
+spread = 14.09
+gravity = Vector2(0, 0)
+initial_velocity_min = 494.96
+initial_velocity_max = 828.29
+scale_amount_min = 0.0
+scale_amount_max = 0.3

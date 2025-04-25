@@ -1,0 +1,99 @@
+[gd_scene load_steps=10 format=3 uid="uid://crkg3vt70v0rm"]
+
+[ext_resource type="Script" uid="uid://y21ykych5kgn" path="res://sick_enemy.gd" id="1_yqfcq"]
+[ext_resource type="Shape2D" uid="uid://b8648a7do7p22" path="res://playercollbox.tres" id="2_wjtnw"]
+[ext_resource type="SpriteFrames" uid="uid://g6pa6aotugah" path="res://playersprites.tres" id="2_yqfcq"]
+[ext_resource type="AudioStream" uid="uid://dy2daaxhaaqyy" path="res://snez.wav" id="4_goboo"]
+[ext_resource type="Texture2D" uid="uid://cmjrcvjbkc7h3" path="res://virus.png" id="5_4pswq"]
+[ext_resource type="Texture2D" uid="uid://scjg3v30vc2" path="res://Download36828.png" id="6_nbqre"]
+[ext_resource type="AnimationLibrary" uid="uid://cp78jtu304f2d" path="res://human_anims.res" id="7_sy6ub"]
+
+[sub_resource type="Animation" id="Animation_noxbx"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xflvp"]
+_data = {
+&"new_animation": SubResource("Animation_noxbx")
+}
+
+[node name="SickEnemy" type="CharacterBody2D"]
+collision_layer = 32
+collision_mask = 192
+script = ExtResource("1_yqfcq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = ExtResource("2_wjtnw")
+
+[node name="JumpChecker" type="RayCast2D" parent="."]
+position = Vector2(0, 24)
+target_position = Vector2(28, -35)
+collision_mask = 128
+
+[node name="Turnaround" type="RayCast2D" parent="."]
+target_position = Vector2(17, 0)
+collision_mask = 64
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = ExtResource("2_yqfcq")
+animation = &"jumping"
+autoplay = "walking"
+
+[node name="SneezeCast" type="RayCast2D" parent="."]
+target_position = Vector2(191, 0)
+collision_mask = 8
+
+[node name="SneezeSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_goboo")
+
+[node name="SneezeTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="SneezeCooldown" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="SneezeParticles" type="CPUParticles2D" parent="."]
+emitting = false
+texture = ExtResource("5_4pswq")
+lifetime = 0.3
+spread = 19.55
+gravity = Vector2(-500, 0)
+initial_velocity_min = 426.0
+initial_velocity_max = 851.0
+scale_amount_min = 0.0
+scale_amount_max = 0.3
+
+[node name="DiceRollTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("6_nbqre")
+hframes = 13
+vframes = 54
+frame = 45
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_xflvp"),
+&"eiosjsoid": ExtResource("7_sy6ub")
+}
+
+[connection signal="timeout" from="SneezeTimer" to="." method="_on_sneeze_timer_timeout"]
+[connection signal="timeout" from="SneezeCooldown" to="." method="_on_sneeze_cooldown_timeout"]
+[connection signal="timeout" from="DiceRollTimer" to="." method="_on_dice_roll_timer_timeout"]

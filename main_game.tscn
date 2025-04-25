@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://b1gftukny217c"]
+
+[ext_resource type="PackedScene" uid="uid://b504d1upe72p7" path="res://StaticPlatform.tscn" id="1_1oj5k"]
+[ext_resource type="Script" uid="uid://njsxnkgd87o5" path="res://main_game.gd" id="1_6bm6p"]
+[ext_resource type="AudioStream" uid="uid://bwsvch7q7142x" path="res://AntiSick.wav" id="2_yx7mw"]
+[ext_resource type="PackedScene" uid="uid://batfqjmxawn4j" path="res://player.tscn" id="3_ykeeq"]
+[ext_resource type="Texture2D" uid="uid://3gktaebyb0n5" path="res://BG City.png" id="5_dugkq"]
+[ext_resource type="PackedScene" uid="uid://qtg2645oep31" path="res://sicky_spawner.tscn" id="7_f52ns"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ykeeq"]
+normal = Vector2(1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_6bm6p"]
+normal = Vector2(-1, 0)
+distance = -426.0
+
+[node name="MainGame" type="Node2D"]
+script = ExtResource("1_6bm6p")
+
+[node name="Table1" parent="." instance=ExtResource("1_1oj5k")]
+position = Vector2(82.95, 220)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_yx7mw")
+
+[node name="Table2" parent="." instance=ExtResource("1_1oj5k")]
+position = Vector2(266.35, 192.155)
+
+[node name="Player" parent="." instance=ExtResource("3_ykeeq")]
+z_index = 640
+position = Vector2(45, 130)
+
+[node name="WorldBounds" type="StaticBody2D" parent="."]
+collision_layer = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldBounds"]
+shape = SubResource("WorldBoundaryShape2D_ykeeq")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="WorldBounds"]
+shape = SubResource("WorldBoundaryShape2D_6bm6p")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -128
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
+position = Vector2(213, 120)
+texture = ExtResource("5_dugkq")
+
+[node name="StaticBody2D" parent="." instance=ExtResource("1_1oj5k")]
+position = Vector2(438, 228)
+
+[node name="SickySpawner" parent="." instance=ExtResource("7_f52ns")]
+position = Vector2(-23, 130)
+direction = 1
+
+[node name="SickySpawner2" parent="." instance=ExtResource("7_f52ns")]
+position = Vector2(536, 138)
+direction = -1
